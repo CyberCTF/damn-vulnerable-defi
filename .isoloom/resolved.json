@@ -1,0 +1,143 @@
+{
+  "generated_by_isoloom": "from isoloom.yml; don't edit: change the spec and run `isoloom generate` (`isoloom check` fails when this file is out of date)",
+  "resolved_version": 1,
+  "name": "damn-vulnerable-defi",
+  "instance": null,
+  "inputs": [],
+  "networks": {
+    "lab": {
+      "cidr": "10.60.201.0/24",
+      "docker_cidr": "10.60.201.0/24",
+      "internet": true,
+      "gateway": null,
+      "gateway_address": "10.60.201.1",
+      "router": null,
+      "controller": "10.60.201.253"
+    }
+  },
+  "reach": [],
+  "machines": {
+    "workbench": {
+      "access": false,
+      "supplied": false,
+      "shapes": [
+        "docker"
+      ],
+      "arch": "amd64",
+      "os": null,
+      "windows": false,
+      "addresses": {
+        "lab": "10.60.201.10"
+      },
+      "docker_addresses": {
+        "lab": "10.60.201.10"
+      },
+      "services": [
+        {
+          "port": 8545,
+          "name": "anvil",
+          "http": true,
+          "publish": 8545
+        },
+        {
+          "port": 8000,
+          "name": "build-report",
+          "http": true,
+          "publish": null
+        }
+      ],
+      "depends_on": [],
+      "inputs": [],
+      "volumes": {},
+      "resources": {
+        "cpus": 2,
+        "memory_mb": 2048,
+        "disk_gb": 20
+      },
+      "gateway_of": [],
+      "routes": [],
+      "default_gateway": null,
+      "offline": false
+    }
+  },
+  "start_order": [
+    "workbench"
+  ],
+  "clones": {},
+  "tools": {},
+  "groups": {},
+  "router": null,
+  "controller": {
+    "addresses": {
+      "lab": "10.60.201.253"
+    }
+  },
+  "published": [
+    {
+      "machine": "workbench",
+      "port": 8545,
+      "host_port": 8545
+    }
+  ],
+  "targets": {
+    "possible": [
+      "docker",
+      "hosted",
+      "docker-vm",
+      "cloud-docker",
+      "kubernetes"
+    ],
+    "generated": [
+      "docker",
+      "hosted",
+      "docker-vm",
+      "cloud-docker",
+      "kubernetes"
+    ],
+    "refused": {},
+    "not_possible": {
+      "hybrid": "only when some machines are containers and others are VMs",
+      "vagrant": "needs `vm:` on workbench",
+      "proxmox": "needs `vm:` on workbench",
+      "cloud-vm": "needs `vm:` on workbench",
+      "external": "needs `external:` on workbench"
+    }
+  },
+  "checks": {
+    "default_position": "networks",
+    "positions": [
+      {
+        "position": "networks",
+        "machine": null,
+        "runner": "isoloom-check",
+        "checks": [
+          {
+            "name": "the build report answers",
+            "derived": false,
+            "kind": "http",
+            "target": "http://workbench:8000/status.txt",
+            "expect": "200",
+            "wait": 120
+          },
+          {
+            "name": "the anvil node answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "workbench:8545",
+            "expect": "open",
+            "wait": 30
+          },
+          {
+            "name": "checks/workbench.sh",
+            "derived": false,
+            "kind": "script",
+            "target": "checks/workbench.sh",
+            "expect": "",
+            "wait": 0
+          }
+        ]
+      }
+    ]
+  },
+  "message": "Open a shell on the workbench with `isoloom connect workbench`: the challenges are in\n~/damn-vulnerable-defi, already built. Read src/<challenge>/README.md, write your solution in\ntest/<challenge>/<Challenge>.t.sol and run `forge test --mp test/<challenge>/<Challenge>.t.sol`\n(add --isolate where the transaction count matters). Start with Unstoppable. An anvil node\nanswers on workbench:8545 (http://localhost:8545 from\nyour machine).\n"
+}

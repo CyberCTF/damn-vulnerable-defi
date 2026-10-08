@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://www.isoloom.com/schema/v1.json
+# Damn Vulnerable DeFi v4 (by The Red Guild, created by tinchoabbate): eighteen vulnerable DeFi
+# challenges (flash loans, oracles, governance, DEXs, wallets, upgradeability...) solved by
+# writing Foundry tests. Source: https://github.com/theredguild/damn-vulnerable-defi, vendored with
+# its lib/ submodules in build/workbench/app/. One workbench machine: Foundry v1.0.0, the
+# challenges built (`forge build`) at image build time, an anvil node on 8545 and the build
+# report on 8000. `isoloom generate`, `isoloom run docker`, then `isoloom connect workbench`.
+version: 1
+name: damn-vulnerable-defi
+
+networks:
+  # Internet for the two challenges that fork mainnet (puppet-v3, curvy-puppet: the player's own
+  # RPC URL in .env) and for extra libraries; every other challenge runs offline.
+  lab: { cidr: 10.60.201.0/24, internet: true }
+
+machines:
+  workbench:
+    networks: { lab: 10 }
+    services:
+      - { port: 8545, name: anvil, http: true, publish: 8545 }
+      - { port: 8000, name: build-report, http: true }
+    resources: { cpus: 2, memory_mb: 2048 }
+    docker:
+      build: build/workbench
+
+checks:
+  - { name: the build report answers, http: "http://workbench:8000/status.txt", wait: 120 }
+  - { name: the anvil node answers, tcp: "workbench:8545" }
+  - checks/workbench.sh
+
+message: |
+  Open a shell on the workbench with `isoloom connect workbench`: the challenges are in
+  ~/damn-vulnerable-defi, already built. Read src/<challenge>/README.md, write your solution in
+  test/<challenge>/<Challenge>.t.sol and run `forge test --mp test/<challenge>/<Challenge>.t.sol`
+  (add --isolate where the transaction count matters). Start with Unstoppable. An anvil node
+  answers on workbench:8545 (http://localhost:{{ machines.workbench.services.0.publish }} from
+  your machine).

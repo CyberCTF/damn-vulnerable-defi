@@ -100,7 +100,8 @@
       "vagrant": "needs `vm:` on workbench",
       "proxmox": "needs `vm:` on workbench",
       "cloud-vm": "needs `vm:` on workbench",
-      "external": "needs `external:` on workbench"
+      "external": "needs `external:` on workbench",
+      "cloud-services": "left out by `targets:`"
     }
   },
   "checks": {

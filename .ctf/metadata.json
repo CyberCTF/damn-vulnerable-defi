@@ -3,6 +3,6 @@
   "description": "Eighteen vulnerable DeFi challenges by The Red Guild (flash loans, price oracles, governance, NFTs, DEXs, lending pools, smart contract wallets, timelocks, vaults, meta-transactions, upgradeability), each solved by writing a Foundry test that exploits the contracts as the player account. Runs as a workbench with Foundry and the challenges built.",
   "question": "Solve the Damn Vulnerable DeFi challenges: make each challenge's Foundry test pass.",
   "category": "MISC",
-  "difficulty": 4,
+  "difficulty": 3,
   "evidence_kind": "SECRET"
 }

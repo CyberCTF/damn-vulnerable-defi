@@ -11,21 +11,25 @@ name: damn-vulnerable-defi
 networks:
   # Internet for the two challenges that fork mainnet (puppet-v3, curvy-puppet: the player's own
   # RPC URL in .env) and for extra libraries; every other challenge runs offline.
-  lab: { cidr: 10.60.201.0/24, internet: true }
+  lab: {cidr: 10.60.201.0/24, internet: true}
 
 machines:
   workbench:
-    networks: { lab: 10 }
-    services:
-      - { port: 8545, name: anvil, http: true, publish: 8545 }
-      - { port: 8000, name: build-report, http: true }
-    resources: { cpus: 2, memory_mb: 2048 }
-    docker:
+    networks: {lab: 10}
+    resources: {cpus: 2, memory_mb: 2048}
+    ports:
+      anvil:
+        port: 8545
+        protocol: http
+        publish: true
+      build-report:
+        port: 8000
+        protocol: http
+    app:
       build: build/workbench
-
 checks:
-  - { name: the build report answers, http: "http://workbench:8000/status.txt", wait: 120 }
-  - { name: the anvil node answers, tcp: "workbench:8545" }
+  - {name: the build report answers, http: "http://workbench:8000/status.txt", wait: 120}
+  - {name: the anvil node answers, tcp: "workbench:8545"}
   - checks/workbench.sh
 
 message: |
@@ -33,5 +37,5 @@ message: |
   ~/damn-vulnerable-defi, already built. Read src/<challenge>/README.md, write your solution in
   test/<challenge>/<Challenge>.t.sol and run `forge test --mp test/<challenge>/<Challenge>.t.sol`
   (add --isolate where the transaction count matters). Start with Unstoppable. An anvil node
-  answers on workbench:8545 (http://localhost:{{ machines.workbench.services.0.publish }} from
+  answers on workbench:8545 ({{ machines.workbench.ports.anvil.url }} from
   your machine).
